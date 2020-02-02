@@ -1,0 +1,27 @@
+{
+    "name": "@openapi-server/core",
+    "version": "0.1.0",
+    "description": "Core library for node stuff",
+    "author": "Derek Dunagan (https://github.com/d11n)",
+    "license": "MIT",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/d11n/openapi-server.git"
+    },
+    "homepage": "https://github.com/d11n/openapi-server#readme",
+    "bugs": {
+        "url": "https://github.com/d11n/openapi-server/issues"
+    },
+    "engines": {
+        "node": ">=12"
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "js-yaml": "^3.13.1",
+        "swagger-parser": "^8.0.4"
+    },
+    "scripts": {
+        "test": "ava"
+    }
+}

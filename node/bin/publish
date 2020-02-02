@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+npm run lerna publish --otp=$1

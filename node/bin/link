@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+npm run lerna exec -- npm install
+npm run lerna bootstrap

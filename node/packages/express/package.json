@@ -1,6 +1,6 @@
 {
     "name": "@openapi-server/express",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Express server defined by OpenAPI",
     "author": "Derek Dunagan (https://github.com/d11n)",
     "license": "MIT",

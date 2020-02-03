@@ -1,7 +1,6 @@
 (function main (express, Openapi_Express_Doc, UTIL) {
     const { does_path_exist, join_paths, ERROR } = UTIL
-
-    class Openapi_Express_Server {
+    return module.exports = class Openapi_Express_Server {
         #dir = null
         #app = null
         #loaded = false
@@ -12,6 +11,9 @@
             this.doc = params.doc
             return this
             //return create_express_app_proxy(this, this.#app)
+        }
+        static async load (...args) {
+            return await load(...args)
         }
         async load () {
             try {
@@ -29,8 +31,6 @@
             }
         }
     }
-    Object.assign(Openapi_Express_Server, { load })
-    return module.exports = Openapi_Express_Server
 
     ///////////
 

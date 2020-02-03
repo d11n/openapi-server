@@ -1,14 +1,15 @@
-(function main (FS, fetch_url, parse_yaml, Swagger_Parser, UTIL) {
-    const { promisify, ERROR } = UTIL
+(function main (FS, fetch_url, parse_yaml, Swagger_Parser, promisify, ERROR) {
     const check_file_exists = promisify(FS.exists)
     const read_file_from_disk = promisify(FS.readFile)
-
-    class Openapi_Doc {
+    return module.exports = class Openapi_Doc {
         #source = null
         #loaded = false
         constructor (doc_arg) {
             this.#source = doc_arg
             return this
+        }
+        static async load (...args) {
+            return await load(...args)
         }
         async load (new_source) {
             try {
@@ -36,7 +37,10 @@
                 return ERROR.throw_error(error)
             }
         }
-        async validate (...args) {
+        static async validate (...args) {
+            return await validate(...args)
+        }
+        async validate () {
             try {
                 const doc = await validate(this)
                 Object.assign(this, doc)
@@ -46,11 +50,6 @@
             }
         }
     }
-    Object.assign(Openapi_Doc, {
-        load: load,
-        validate: validate,
-    })
-    return module.exports = Openapi_Doc
 
     ///////////
 
@@ -96,7 +95,7 @@
             const doc_string = await read_file_from_disk(file_path, 'utf8')
             return parse_yaml(doc_string)
         } catch (error) {
-            return error
+            return ERROR.throw_error(error)
         }
     }
 
@@ -105,7 +104,7 @@
             const doc_string = await fetch_url(url)
             return parse_yaml(doc_string)
         } catch (error) {
-            return error
+            return ERROR.throw_error(error)
         }
     }
 
@@ -120,8 +119,6 @@
     require('axios').get,
     require('js-yaml').safeLoad,
     require('swagger-parser'),
-    {
-        promisify: require('util').promisify,
-        ERROR: require('./error'),
-    },
+    require('util').promisify,
+    require('./error'),
 ))

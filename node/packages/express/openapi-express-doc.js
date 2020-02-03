@@ -1,6 +1,8 @@
 (async function main ({ Openapi_Doc, ERROR }) {
-
-    class Openapi_Express_Doc extends Openapi_Doc {
+    return module.exports = class Openapi_Express_Doc extends Openapi_Doc {
+        static async validate (...args) {
+            return await validate(...args)
+        }
         async validate (...args) {
             try {
                 super.validate(...args)
@@ -11,10 +13,6 @@
             }
         }
     }
-    Object.assign(Openapi_Express_Doc, {
-        validate: validate,
-    })
-    return module.exports = Openapi_Express_Doc
 
     ///////////
 

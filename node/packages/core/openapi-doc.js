@@ -122,7 +122,6 @@
     require('swagger-parser'),
     {
         promisify: require('util').promisify,
-        asyncify: require('./asyncify'),
         ERROR: require('./error'),
     },
 ))

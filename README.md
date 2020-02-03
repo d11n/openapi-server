@@ -1,1 +1,1 @@
-# openapi-server
+# OpenAPI Server

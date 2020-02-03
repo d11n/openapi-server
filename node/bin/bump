@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
 
 npm update lerna
-npm run lerna $@
+npm run lerna version minor

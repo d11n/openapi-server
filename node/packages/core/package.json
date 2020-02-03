@@ -1,7 +1,7 @@
 {
     "name": "@openapi-server/core",
     "version": "0.4.0",
-    "description": "OpenAPI Server core",
+    "description": "OpenAPI Server node core",
     "author": "Derek Dunagan (https://github.com/d11n)",
     "license": "MIT",
     "main": "index.js",

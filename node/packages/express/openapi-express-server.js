@@ -1,5 +1,5 @@
 (function main (express, Openapi_Express_Doc, UTIL) {
-    const { does_path_exist, join_paths, ERROR } = UTIL
+    const { check_path_exists, join_paths, ERROR } = UTIL
     return module.exports = class Openapi_Express_Server {
         #dir = null
         #app = null
@@ -9,8 +9,7 @@
             this.#dir = params.dir
             this.#app = params.app
             this.doc = params.doc
-            return this
-            //return create_express_app_proxy(this, this.#app)
+            return create_express_app_proxy(this, this.#app)
         }
         static async load (...args) {
             return await load(...args)
@@ -30,6 +29,10 @@
                 return ERROR.throw_error(error)
             }
         }
+        // On app.listen(), make sure the OpenAPI routes are loaded:
+        async listen() {
+            return await this.load()
+        }
     }
 
     ///////////
@@ -38,7 +41,7 @@
         const params = {
             dir: join_paths(raw_params.dir, 'operations'),
         }
-        if (does_path_exist(params.dir)) {
+        if (check_path_exists(params.dir)) {
             params.doc = new Openapi_Express_Doc(raw_params.doc)
             params.app = express()
         } else {
@@ -49,22 +52,54 @@
         return params
     }
 
-    function create_express_app_proxy(target_instance, app) {
-        return new Proxy(target_instance, {
-            get: function get_express_proxy_member(target, prop, receiver) {
+    function create_express_app_proxy(server, app) {
+        return new Proxy(server, {
+            get: function get_express_proxy_member(target, prop, proxy) {
+                const target_value = get_prop_value(target)
+                const app_value = get_prop_value(app)
+                const target_prop_is_method = 'function' === typeof target_value
+                const app_prop_is_method = 'function' === typeof app_value
                 switch (true) {
-                    case 'load' === prop:
-                        return server.load
+                    case undefined === target_value && undefined === app_value:
+                        return undefined
+                    case undefined !== target_value && !target_prop_is_method:
+                    case target_prop_is_method && !app_prop_is_method:
+                    // ^ Ignore express app props that are not methods when
+                    //   target prop is defined, this shouldn't happen
+                        return target_value
+                    case undefined !== app_value && !app_prop_is_method:
+                    case app_prop_is_method && !target_prop_is_method:
+                        return app_value
+                    case target_prop_is_method && app_prop_is_method:
+                        return function (...args) {
+                            target_value(...args)
+                            // ^ Defining an express method on the target
+                            //   is effectively a pre-hook
+                            return app_value(...args)
+                        }
                 }
-        
+                return ERROR.throw_error(
+                    'This line of get_express_proxy_member() should not have',
+                    'executed. Please log an issue at',
+                    'https://github.com/d11n/openapi-server/issues',
+                    'with steps for how this error was triggered',
+                )
+
                 ///////////
-        
-                function get_target_value() {
-                    return Reflect.get(target, prop, receiver)
-                }
-        
-                function get_app_value() {
-                    return Reflect.get(app, prop, receiver)
+
+                // prop is from outer closure
+                function get_prop_value (owner) {
+                    if (undefined === owner[prop]) {
+                        return undefined
+                    }
+                    const value = owner[prop]
+                    return 'function' === typeof value
+                        ? function (...args) { value.apply(owner, args) }
+                        // ^ Ensure that `this` is the correct object, so the
+                        //   server can access its private properties and the
+                        //   express app will behave as if nothing interesting
+                        //   is wrapping it
+                        : value
                 }
             },
         })
@@ -118,7 +153,7 @@
     require('express'),
     require('./openapi-express-doc'),
     {
-        does_path_exist: require('fs').existsSync,
+        check_path_exists: require('fs').existsSync,
         join_paths: require('path').join,
         ...require('@openapi-server/core'),
     },

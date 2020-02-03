@@ -1,6 +1,6 @@
 {
     "name": "@openapi-server/core",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "OpenAPI Server core",
     "author": "Derek Dunagan (https://github.com/d11n)",
     "license": "MIT",

@@ -2,6 +2,4 @@
 
 Not particularly useful on its own. You probably want:
 
-```
-npm add @openapi-server/express
-```
+- [OpenAPI Express Server](express)

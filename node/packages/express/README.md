@@ -11,7 +11,7 @@ npm add @openapi-server/express
 
 ## Basic Usage
 
-### `./index.js`
+##### ./index.js
 
 ```js
 (async function main (CONFIG, join_paths, { Openapi_Express_Server }) {
@@ -29,15 +29,15 @@ npm add @openapi-server/express
         throw error
     }
 }(
-    require('../config),
+    require('../config'),
     require('path').join,
     require('@openapi-server/express'),
 ))
 ```
 
-### `./operations/{operationId}.js`
+##### ./operations/{operationId}.js
 
-Export a normal Express route callback:
+Export a normal Express route callback for each `operationId`:
 
 ```js
 module.exports = function list_users(request, response, next) {

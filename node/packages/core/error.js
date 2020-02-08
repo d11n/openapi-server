@@ -1,24 +1,24 @@
-(function main () {
+(function main (sprintf) {
     return module.exports = {
         get_error,
         get_type_error,
         throw_error,
         throw_type_error,
-        BAD_OPENAPI_DOC_ARG_MSG: format_message(
+        BAD_DOC_ARG_MSG: [
             'OpenAPI document argument must be a',
             'filesystem path, URL, or object.',
-        ),
-        MISSING_OPERATION_ID_MSG: (path_key, prop) => format_message(
-            `"${ path_key }".${ prop } must have an operationId.`
-        ),
-        NO_OPENAPI_DOC_SOURCE_ERROR: format_message(
+        ],
+        MISSING_OPERATION_ID_MSG: [
+            '%s".%s must have an operationId.',
+        ],
+        NO_DOC_SOURCE_ERROR_MSG: [
             'Without a source for the OpenAPI doc, there\'s nothing to do.',
             'Provide a filesystem path, URL, or object at instantiation',
             'or when calling a method.',
-        ),
-        EXPRESS_NO_OPERATIONS_DIR: (provided_dir) => format_message(
-            `There is no \`operations\` directory in ${ provided_dir }.`,
-        ),
+        ],
+        EXPRESS_NO_OPERATIONS_DIR_MSG: [
+            'There is no `operations` directory in %s.',
+        ],
     }
 
     ///////////
@@ -47,13 +47,12 @@
         throw get_type_error(...raw_message)
     }
 
-    function format_message (...args) {
-        if (1 === args.length) {
-            const message = args[0]
-            return Array.isArray(message)
-                ? message.map(String).join(' ')
-                : String(message)
-        }
-        return args.map(String).join(' ')
+    function format_message (raw_format, ...args) {
+        const format = Array.isArray(raw_format)
+            ? raw_format.map(String).join(' ')
+            : String(raw_format)
+        return sprintf(format, ...args)
     }
-}())
+}(
+    require('sprintf'),
+))

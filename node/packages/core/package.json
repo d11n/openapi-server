@@ -19,9 +19,17 @@
     "dependencies": {
         "axios": "^0.19.2",
         "js-yaml": "^3.13.1",
+        "sprintf": "^0.1.5",
         "swagger-parser": "^8.0.4"
     },
+    "devDependencies": {
+        "ava": "^3.2.0",
+        "nyc": "^15.0.0",
+        "test-listen": "^1.1.0"
+    },
     "scripts": {
-        "test": "ava"
+        "test": "nyc ava --verbose",
+        "test-watch": "nyc ava --verbose --watch",
+        "test-brk": "nyc ava --verbose --serial --node-arguments=--inspect-brk --timeout 42m"
     }
 }

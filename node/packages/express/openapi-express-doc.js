@@ -43,7 +43,9 @@
                 const op = path_item[prop]
                 if (op && !op.operationId) {
                     return ERROR.throw_error(
-                        ERROR.MISSING_OPERATION_ID_MSG(path_key, prop),
+                        ERROR.MISSING_OPERATION_ID_MSG,
+                        path_key,
+                        prop,
                     )
                 }
             }

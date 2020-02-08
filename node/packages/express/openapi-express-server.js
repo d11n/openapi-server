@@ -46,7 +46,8 @@
             params.app = express()
         } else {
             return ERROR.throw_error(
-                ERROR.EXPRESS_NO_OPERATIONS_DIR(raw_params.dir),
+                ERROR.EXPRESS_NO_OPERATIONS_DIR_MSG,
+                raw_params.dir,
             )
         }
         return params

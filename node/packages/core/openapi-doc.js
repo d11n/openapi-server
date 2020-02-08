@@ -27,7 +27,7 @@
         async reload () {
             try {
                 if (!this.#source) {
-                    return ERROR.throw_error(ERROR.NO_OPENAPI_DOC_SOURCE_ERROR)
+                    return ERROR.throw_error(ERROR.NO_DOC_SOURCE_ERROR_MSG)
                 }
                 this.#loaded = true
                 const doc = await load(this.#source)
@@ -55,17 +55,19 @@
 
     async function load (doc_arg) {
         try {
-            if ('string' !== typeof doc_arg) {
+            if (doc_arg && 'object' === typeof doc_arg) {
                 return doc_arg
-            } else if (is_url(doc_arg)) {
-                return await get_from_url(doc_arg)
-            } else {
-                const file_exists = await check_file_exists(doc_arg)
-                if (file_exists) {
-                    return await get_from_disk(doc_arg)
+            } else if ('string' === typeof doc_arg) {
+                if (is_url(doc_arg)) {
+                    return await get_from_url(doc_arg)
+                } else {
+                    const file_exists = await check_file_exists(doc_arg)
+                    if (file_exists) {
+                        return await get_from_disk(doc_arg)
+                    }
                 }
             }
-            return ERROR.throw_error(ERROR.BAD_OPENAPI_DOC_ARG_MSG)
+            return ERROR.throw_error(ERROR.BAD_DOC_ARG_MSG)
         } catch (error) {
             return ERROR.throw_error(error)
         }
@@ -101,8 +103,10 @@
 
     async function get_from_url (url) {
         try {
-            const doc_string = await fetch_url(url)
-            return parse_yaml(doc_string)
+            const response = await fetch_url(url)
+            return 'string' === typeof response.data
+                ? parse_yaml(response.data)
+                : response.data
         } catch (error) {
             return ERROR.throw_error(error)
         }

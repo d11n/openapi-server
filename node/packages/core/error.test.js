@@ -1,5 +1,5 @@
 (function main (test, ERROR) {
-    // Config these two constants as edits are made to error.js
+    // Configure these two constants as edits are made to error.js
     const NON_MESSAGE_MEMBER_LIST = [
         'get_error',
         'get_type_error',
@@ -7,9 +7,21 @@
         'throw_type_error',
     ]
     const ARG_COUNT_DICT = {
-        BAD_DOC_ARG_MSG: 0,
-        MISSING_OPERATION_ID_MSG: 2,
-        NO_DOC_SOURCE_ERROR_MSG: 0,
+        TYPE_OF_ERROR_MSG: 2,
+        INSTANCE_OF_ERROR_MSG: 2,
+        SUBCLASS_OF_ERROR_MSG: 2,
+        ABSTRACT_STATIC_MEMBER_MSG: 2,
+        ABSTRACT_INSTANCE_MEMBER_MSG: 2,
+        DEFINITION_MUST_BE_OBJECT: 0,
+        DEFINITION_INSTANCE_TYPE_MSG: 1,
+        DOCUMENT_BAD_SOURCE_MSG: 0,
+        DOCUMENT_NO_SOURCE_MSG: 0,
+        JSON_SCHEMA_NO_VERSION_MSG: 0,
+        JSON_SCHEMA_VERSION_MISMATCH_MSG: 2,
+        JSON_SCHEMA_VERSION_TOO_EDGE_MSG: 1,
+        JSON_SCHEMA_INVALID_VERSION_MSG: 1,
+        JSON_SCHEMA_VALIDATION_MSG: 2,
+        OPENAPI_NO_OPERATION_ID_MSG: 2,
         EXPRESS_NO_OPERATIONS_DIR_MSG: 1,
     }
 

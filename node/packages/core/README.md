@@ -2,4 +2,4 @@
 
 Not particularly useful on its own. You probably want:
 
-- [OpenAPI Express Server](express)
+- [OpenAPI Express Server](../express)

@@ -1,5 +1,5 @@
 {
     "zombie": function eat_brain () {
-        throw new DeathError
+        throw new Death
     }
 }

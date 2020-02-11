@@ -17,6 +17,7 @@
         "node": ">=12"
     },
     "dependencies": {
+        "ajv": "^6.11.0",
         "axios": "^0.19.2",
         "js-yaml": "^3.13.1",
         "sprintf": "^0.1.5",
@@ -28,8 +29,8 @@
         "test-listen": "^1.1.0"
     },
     "scripts": {
-        "test": "nyc ava --verbose",
-        "test-watch": "nyc ava --verbose --watch",
-        "test-brk": "nyc ava --verbose --serial --node-arguments=--inspect-brk --timeout 42m"
+        "test": "nyc ava",
+        "test-watch": "nyc ava --watch",
+        "test-brk": "ava --verbose --serial --node-arguments=--inspect-brk --timeout 42m"
     }
 }

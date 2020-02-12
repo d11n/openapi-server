@@ -5,7 +5,7 @@
         }
     }
 }(
-    require('./document'),
+    require('../document'),
     require('./json-schema-definition'),
-    require('./error'),
+    require('../error'),
 ))

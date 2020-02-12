@@ -7,6 +7,7 @@
         'throw_type_error',
     ]
     const ARG_COUNT_DICT = {
+        CLASS_ERROR_MSG: 1,
         TYPE_OF_ERROR_MSG: 2,
         INSTANCE_OF_ERROR_MSG: 2,
         SUBCLASS_OF_ERROR_MSG: 2,

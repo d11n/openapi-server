@@ -1,41 +1,28 @@
-(function main (Ajv, METASCHEMA, Definition, ERROR) {
+(function main (Ajv, METASCHEMA, Definition, UTIL, ERROR) {
     return module.exports = class Json_Schema_Definition extends Definition {
-        #version = null
+        #version = null // not used directly, but useful for debugging
         #validator = null
-        constructor (...args) {
-            super(...args)
-            this.#version = this.___________version
-            this.#validator = this.___________validator
-            delete this.___________version
-            delete this.___________validator
-            return this
+        constructor (params) {
+            super()
+            this.#version = params.version
+            this.#validator = params.validator
         }
-        static validate (...args) {
-            return validate_schema(...args)
+        static async validate (...args) {
+            return await validate_schema(...args)
         }
-        validate (...args) {
-            return validate_data(this, this.#validator, ...args)
+        async validate (...args) {
+            return await validate_data(this, this.#validator, ...args)
         }
     }
 
     ///////////
 
-    function validate_schema (instance, schema, options) {
-        const Class = module.exports
-        if (!(instance instanceof Class)) {
-            return ERROR.throw_type_error(
-                ERROR.DEFINITION_INSTANCE_TYPE_MSG,
-                Class.name,
-            )
-        }
-        const version = determine_version(
-            schema,
-            (options && options.version) ? options.version : null,
-        )
-
+    async function validate_schema (schema, options = {}) {
+        const version = determine_version(schema, options.version)
         const ajv = get_ajv_instance(version)
+        let validator
         try {
-            instance.___________validator = ajv.compile(schema)
+            validator = ajv.compile(schema)
         } catch (error) {
             return ERROR.throw_error(
                 ERROR.JSON_SCHEMA_VALIDATION_MSG,
@@ -43,11 +30,14 @@
                 ajv.errors[0].message,
             )
         }
-        instance.___________version = version
-        return instance
+        return {
+            ...schema,
+            __validator: validator,
+            __version: version,
+        } // ^ __ props are fed to the constructor
     }
 
-    function validate_data (instance, data_validator, data) {
+    async function validate_data (instance, data_validator, data) {
         if (data_validator(data)) {
             return instance
         }
@@ -146,6 +136,7 @@
         'draft-06': require('ajv/lib/refs/json-schema-draft-06.json'),
         'draft-04': require('ajv/lib/refs/json-schema-draft-04.json'),
     },
-    require('./definition'),
-    require('./error'),
+    require('../definition'),
+    require('../util'),
+    require('../error'),
 ))

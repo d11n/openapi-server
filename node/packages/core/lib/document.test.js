@@ -8,18 +8,22 @@
     /////////// Tests
 
     async function load_from_object (t) {
-        let definition
+        let definition, doc
         try {
             definition = await Document.load(Definition, doc1)
             t.true(definition.info.version === doc1.info.version)
             definition = await Document.load(Definition, doc2)
             t.true(definition.info.version === doc2.info.version)
 
-            const doc = new Document(doc1)
+            doc = await Document.create(doc1)
             await doc.load()
             t.true(doc.definition.info.version === doc1.info.version)
             await doc.load(doc2)
             t.true(doc.definition.info.version === doc2.info.version)
+
+            doc = new Document(doc1)
+            await doc.load()
+            t.true(doc.definition.info.version === doc1.info.version)
         } catch (error) {
             t.fail(error.message)
         }
@@ -28,7 +32,7 @@
     async function load_from_file (t) {
         let definition
         try {
-            const doc_dir = join_paths(__dirname, 'fixtures/openapi/v3')
+            const doc_dir = join_paths(__dirname, '../fixtures/openapi/v3')
             const doc1_path = join_paths(doc_dir, 'minimum-v1.json')
             const doc2_path = join_paths(doc_dir, 'minimum-v2.json')
 
@@ -37,7 +41,7 @@
             definition = await Document.load(Definition, doc2_path)
             t.true(definition.info.version === doc2.info.version)
 
-            const doc = new Document(doc1_path)
+            const doc = await Document.create(doc1_path)
             await doc.load()
             t.true(doc.definition.info.version === doc1.info.version)
             await doc.load(doc2_path)
@@ -64,7 +68,7 @@
             definition = await Document.load(Definition, server2_url)
             t.true(definition.info.version === doc2.info.version)
 
-            const doc = new Document(server1_url)
+            const doc = await Document.create(server1_url)
             await doc.load()
             t.true(doc.definition.info.version === doc1.info.version)
             await doc.load(server2_url)
@@ -79,7 +83,7 @@
 
     async function ensure_load_reload (t) {
         try {
-            const doc = new Document
+            const doc = await Document.create(null)
             await t.throwsAsync(async () => doc.load())
             await t.throwsAsync(async () => doc.reload())
             await doc.load(doc1)
@@ -97,15 +101,14 @@
         await t.throwsAsync(async () => Document.load(null))
         await t.throwsAsync(async () => Document.load(Document, {}))
         await t.throwsAsync(async () => Document.load(Definition, 'deadend'))
-        await t.throwsAsync(async () => Document.load(Definition, {}, 3))
         try {
-            new Document(() => 'blow up')
+            await Document.create(() => 'blow up')
         } catch (error) {
             t.pass()
         }
         await t.throwsAsync(async () => Document.load(Definition, 1))
         try {
-            new Document(true)
+            await Document.create(true)
         } catch (error) {
             t.pass()
         }
@@ -130,6 +133,6 @@
     },
     require('./document'),
     require('./definition'),
-    require('./fixtures/openapi/v3/minimum-v1.json'),
-    require('./fixtures/openapi/v3/minimum-v2.json'),
+    require('../fixtures/openapi/v3/minimum-v1.json'),
+    require('../fixtures/openapi/v3/minimum-v2.json'),
 ))

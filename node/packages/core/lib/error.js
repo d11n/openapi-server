@@ -4,14 +4,17 @@
         get_type_error,
         throw_error,
         throw_type_error,
+        CLASS_ERROR_MSG: [
+            '`%s` must be a class.',
+        ],
         TYPE_OF_ERROR_MSG: [
-            '%s must have a type of %s.',
+            '`%s` must have a type of "%s".',
         ],
         INSTANCE_OF_ERROR_MSG: [
-            '%s must be an instance of %s.',
+            '`%s` must be an instance of `%s`.',
         ],
         SUBCLASS_OF_ERROR_MSG: [
-            '%s must either be %s or a subclass of it.',
+            '`%s` must either be `%s` or a subclass of it.',
         ],
         ABSTRACT_STATIC_MEMBER_MSG: [
             '%s.%s() is an abstract static member',

@@ -1,29 +1,19 @@
-(async function main ({ Openapi_Doc, ERROR }) {
-    return module.exports = class Openapi_Express_Doc extends Openapi_Doc {
+(async function main ({ Openapi_Definition, ERROR }) {
+    return module.exports = class Openapi_Express_Definition extends Openapi_Definition {
         static async validate (...args) {
             return await validate(...args)
-        }
-        async validate (...args) {
-            try {
-                super.validate(...args)
-                validate_paths(this.paths)
-                return this
-            } catch (error) {
-                return ERROR.throw_error(error)
-            }
         }
     }
 
     ///////////
 
-    async function validate (raw_doc) {
-        try {
-            const doc = await Openapi_Doc.validate(raw_doc)
-            validate_paths(this.paths)
-            return doc
-        } catch (error) {
-            return ERROR.throw_error(error)
-        }
+    async function validate (definition, options = {}) {
+        const valid_definition = await Openapi_Definition.validate(
+            definition,
+            options,
+        )
+        validate_paths(valid_definition.paths)
+        return valid_definition
     }
 
     function validate_paths (path_dict) {

@@ -1,0 +1,19 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Minimal Express App",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "getRoot",
+                "responses": {
+                    "default": {
+                        "description": "get the root object"
+                    }
+                }
+            }
+        }
+    }
+}

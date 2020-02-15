@@ -83,7 +83,13 @@
     ///////////
 
     async function get_from_disk (file_path) {
-        return await read_file_from_disk(file_path, 'utf8')
+        try {
+            console.log(file_path)
+            debugger
+            return await read_file_from_disk(file_path, 'utf8')
+        } catch (error) {
+            debugger
+        }
     }
 
     async function get_from_url (url) {

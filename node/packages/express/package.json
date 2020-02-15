@@ -32,7 +32,13 @@
         "@openapi-server/core": "^0.7.0",
         "express": "^4.17.1"
     },
+    "devDependencies": {
+        "ava": "^3.2.0",
+        "nyc": "^15.0.0"
+    },
     "scripts": {
-        "test": "ava"
+        "test": "nyc ava",
+        "test-watch": "nyc ava --watch",
+        "test-brk": "ava --verbose --serial --node-arguments=--inspect-brk --timeout 42m"
     }
 }

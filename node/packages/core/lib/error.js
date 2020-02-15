@@ -16,13 +16,8 @@
         SUBCLASS_OF_ERROR_MSG: [
             '`%s` must either be `%s` or a subclass of it.',
         ],
-        ABSTRACT_STATIC_MEMBER_MSG: [
-            '%s.%s() is an abstract static member',
-            'and must be defined in a child class.',
-        ],
-        ABSTRACT_INSTANCE_MEMBER_MSG: [
-            '%s#%s() is an abstract instance member',
-            'and must be defined in a child class.',
+        NO_NEW_MSG: [
+            'Use %s.create() instead of constructing via the `new` keyword.',
         ],
         DEFINITION_MUST_BE_OBJECT: [
             'Definition must be an object',

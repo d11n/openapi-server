@@ -132,10 +132,14 @@
                         return app_value
                     case server_prop_is_method && app_prop_is_method:
                         return function (...args) {
-                            server_value(...args)
+                            const promise = server_value(...args)
                             // ^ Defining an express method on the server
                             //   is effectively a pre-hook
-                            return app_value(...args)
+                            return promise && 'function' === typeof promise.then
+                                ? promise
+                                    .then(() => app_value(...args))
+                                    .catch(ERROR.throw_error)
+                                : app_value(...args)
                         }
                 }
                 return ERROR.throw_error(

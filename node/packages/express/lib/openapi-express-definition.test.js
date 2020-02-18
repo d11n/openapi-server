@@ -24,5 +24,5 @@
 }(
     require('ava'),
     require('./openapi-express-definition'),
-    require('../test/openapi.json'),
+    require('../fixtures/openapi.json'),
 ))

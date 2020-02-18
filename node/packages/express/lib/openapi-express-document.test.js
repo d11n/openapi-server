@@ -11,5 +11,5 @@
 }(
     require('ava'),
     require('./openapi-express-document'),
-    require('../test/openapi.json'),
+    require('../fixtures/openapi.json'),
 ))

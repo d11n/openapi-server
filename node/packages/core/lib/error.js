@@ -2,6 +2,7 @@
     return module.exports = {
         get_error,
         get_type_error,
+        throw: throw_error,
         throw_error,
         throw_type_error,
         CLASS_ERROR_MSG: [

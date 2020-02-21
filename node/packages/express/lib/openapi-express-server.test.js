@@ -11,16 +11,12 @@
         }
         Openapi_Express_Server.create(server_params)
             .then(boot_app)
-            .catch((error) => throw_error(error))
+            .catch(throw_error)
 
         ///////////
 
         async function boot_app (app, ...args) {
-            try {
-                return await app.listen(examine_running_app)
-            } catch (error) {
-                return throw_error(error)
-            }
+            return await app.listen(examine_running_app)
         }
 
         function examine_running_app (...args) {

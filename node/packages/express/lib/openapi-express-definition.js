@@ -1,7 +1,7 @@
 (async function main ({ Openapi_Definition, ERROR }) {
     return module.exports = class Openapi_Express_Definition extends Openapi_Definition {
         static async validate (...args) {
-            return await validate(...args)
+            return await validate(...args).catch(ERROR.throw)
         }
     }
 
@@ -11,7 +11,7 @@
         const valid_definition = await Openapi_Definition.validate(
             definition,
             options,
-        )
+        ).catch(ERROR.throw)
         validate_paths(valid_definition.paths)
         return valid_definition
     }
@@ -32,7 +32,7 @@
             for (const prop of op_prop_list) {
                 const op = path_item[prop]
                 if (op && !op.operationId) {
-                    return ERROR.throw_error(
+                    return ERROR.throw(
                         ERROR.MISSING_OPERATION_ID_MSG,
                         path_key,
                         prop,

@@ -20,10 +20,6 @@
             t.true(doc.definition.info.version === doc1.info.version)
             await doc.load(doc2)
             t.true(doc.definition.info.version === doc2.info.version)
-
-            doc = new Document(doc1)
-            await doc.load()
-            t.true(doc.definition.info.version === doc1.info.version)
         } catch (error) {
             t.fail(error.message)
         }

@@ -8,10 +8,10 @@
             this.#validator = params.validator
         }
         static async validate (...args) {
-            return await validate_schema(...args)
+            return await validate_schema(...args).catch(ERROR.throw)
         }
         async validate (...args) {
-            return await validate_data(this, this.#validator, ...args)
+            return await validate_data(this, this.#validator, ...args).catch(ERROR.throw)
         }
     }
 
@@ -19,16 +19,18 @@
 
     async function validate_schema (schema, options = {}) {
         const version = determine_version(schema, options.version)
-        const ajv = get_ajv_instance(version)
+        const ajv = get_ajv_instance(version, options)
         let validator
         try {
             validator = ajv.compile(schema)
         } catch (error) {
-            return ERROR.throw_error(
-                ERROR.JSON_SCHEMA_VALIDATION_MSG,
-                ajv.errors[0].dataPath,
-                ajv.errors[0].message,
-            )
+            return ajv.errors
+                ? ERROR.throw(
+                    ERROR.JSON_SCHEMA_VALIDATION_MSG,
+                    ajv.errors[0].dataPath,
+                    ajv.errors[0].message,
+                )
+                : ERROR.throw(error)
         }
         return {
             ...schema,
@@ -41,7 +43,7 @@
         if (data_validator(data)) {
             return instance
         }
-        return ERROR.throw_error(
+        return ERROR.throw(
             ERROR.JSON_SCHEMA_VALIDATION_MSG,
             data_validator.errors[0].dataPath,
             data_validator.errors[0].message,
@@ -58,11 +60,11 @@
         } else if (!schema_version && passed_version) {
             return passed_version
         } else if (!schema_version && !passed_version) {
-            return ERROR.throw_error(ERROR.JSON_SCHEMA_NO_VERSION_MSG)
+            return ERROR.throw(ERROR.JSON_SCHEMA_NO_VERSION_MSG)
         } else if (schema_version === passed_version) {
             return schema_version
         }
-        return ERROR.throw_error(
+        return ERROR.throw(
             ERROR.JSON_SCHEMA_VERSION_MISMATCH_MSG,
             schema_version,
             passed_version,
@@ -102,28 +104,32 @@
         if (supported_version_list.includes(version_test)) {
             return version
         } else if (unsupported_version_list.includes(version_test)) {
-            return ERROR.throw_error(
+            return ERROR.throw(
                 ERROR.JSON_SCHEMA_VERSION_TOO_EDGE_MSG,
                 version,
             )
         }
-        return ERROR.throw_error(
+        return ERROR.throw(
             ERROR.JSON_SCHEMA_INVALID_VERSION_MSG,
             raw_version,
         )
     }
 
-    function get_ajv_instance(version) {
+    function get_ajv_instance(version, options) {
         let ajv
+        const ajv_options = {
+            logger: false,
+            formats: options.formats || {},
+        }
         switch (version) {
             case 'draft-07':
-                return new Ajv({ logger: false })
+                return new Ajv(ajv_options)
             case 'draft-06':
-                ajv = new Ajv({ logger: false })
+                ajv = new Ajv(ajv_options)
                 ajv.addMetaSchema(METASCHEMA['draft-06'])
                 return ajv
             case 'draft-04':
-                ajv = new Ajv({ schemaId: 'id', logger: false })
+                ajv = new Ajv({ ...ajv_options, schemaId: 'id' })
                 ajv.addMetaSchema(METASCHEMA['draft-04'])
                 return ajv
         }

@@ -3,6 +3,7 @@
     const NON_MESSAGE_MEMBER_LIST = [
         'get_error',
         'get_type_error',
+        'throw',
         'throw_error',
         'throw_type_error',
     ]

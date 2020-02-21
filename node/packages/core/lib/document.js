@@ -19,10 +19,10 @@
             return this
         }
         static async create (...args) {
-            return await construct(this, ...args)
+            return await construct(this, ...args).catch(ERROR.throw)
         }
         static async load (...args) {
-            return await load(...args)
+            return await load(...args).catch(ERROR.throw)
         }
         async load (new_source, new_options = {}) {
             if (new_source) {
@@ -32,17 +32,17 @@
             } else if (this.#loaded) {
                 return this
             }
-            return await this.reload()
+            return await this.reload().catch(ERROR.throw)
         }
         async reload () {
             if (!this.#source) {
-                return ERROR.throw_error(ERROR.DOCUMENT_NO_SOURCE_MSG)
+                return ERROR.throw(ERROR.DOCUMENT_NO_SOURCE_MSG)
             }
             this.#definition = await load(
                 this.constructor.Definition,
                 this.#source,
                 this.#options,
-            )
+            ).catch(ERROR.throw)
             this.#loaded = true
             return this
         }
@@ -67,27 +67,27 @@
             definition = source
         } else if ('string' === typeof source) {
             if (is_url(source)) {
-                definition = await get_from_url(source)
+                definition = await get_from_url(source).catch(ERROR.throw)
             } else {
-                const file_exists = await check_file_exists(source)
+                const file_exists = await check_file_exists(source).catch(ERROR.throw)
                 if (file_exists) {
-                    definition = await get_from_disk(source)
+                    definition = await get_from_disk(source).catch(ERROR.throw)
                 }
             }
         }
         return definition
-            ? Definition_Class.create(definition, options)
-            : ERROR.throw_error(ERROR.DOCUMENT_BAD_SOURCE_MSG)
+            ? Definition_Class.create(definition, options).catch(ERROR.throw)
+            : ERROR.throw(ERROR.DOCUMENT_BAD_SOURCE_MSG)
     }
 
     ///////////
 
     async function get_from_disk (file_path) {
-        return await read_file_from_disk(file_path, 'utf8')
+        return await read_file_from_disk(file_path, 'utf8').catch(ERROR.throw)
     }
 
     async function get_from_url (url) {
-        const response = await fetch_url(url)
+        const response = await fetch_url(url).catch(ERROR.throw)
         return response.data
     }
 

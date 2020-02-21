@@ -1,7 +1,7 @@
 (function main (Swagger_Parser, Definition, UTIL, ERROR) {
     return module.exports = class Openapi_Definition extends Definition {
         static async validate (...args) {
-            return await validate(...args)
+            return await validate(...args).catch(ERROR.throw)
         }
     }
 
@@ -14,7 +14,7 @@
         const valid_definition = await parser.validate(
             definition,
             UTIL.get_options(options),
-        )
+        ).catch(ERROR.throw)
         // ^ if options isn't passed, parser.validate() throws:
         //       Cannot read property 'dereference' of undefined
         return valid_definition

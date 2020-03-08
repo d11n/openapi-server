@@ -56,11 +56,13 @@
             const doc = await Openapi_Express_Document
                 .create(document)
                 .catch(ERROR.throw)
+            const app = express()
+            app.use(express.json())
             return new module.exports({
                 key: KEY,
                 document: doc,
                 operations_directory: operations_directory,
-                app: express(),
+                app: app,
             })
         }
         return ERROR.throw(

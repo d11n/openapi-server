@@ -7,17 +7,17 @@
 
     ///////////
 
-    async function validate (definition, options = {}) {
+    async function validate (raw_definition, raw_options = {}) {
+        const options = UTIL.get_options(raw_options)
+        // ^ if options isn't passed, parser.validate() throws:
+        //       Cannot read property 'dereference' of undefined
         const parser = new Swagger_Parser
         // ^ instantiate because Swagger_Parser.validate() throws:
         //       Class is not a constructor
-        const valid_definition = await parser.validate(
-            definition,
-            UTIL.get_options(options),
-        ).catch(ERROR.throw)
-        // ^ if options isn't passed, parser.validate() throws:
-        //       Cannot read property 'dereference' of undefined
-        return valid_definition
+        const definition = await parser.dereference(raw_definition, options)
+            .catch(ERROR.throw)
+        return await parser.validate(definition, options)
+            .catch(ERROR.throw)
     }
 }(
     require('swagger-parser'),

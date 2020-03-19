@@ -103,8 +103,10 @@
     }
 
     async function wrap_op (def, op) {
-        const req_schema_dict = await build_req_schema_dict(def).catch(ERROR.throw)
-        const res_schema_dict = await build_res_schema_dict(def).catch(ERROR.throw)
+        const req_schema_dict = await build_req_schema_dict(def)
+            .catch(ERROR.throw)
+        const res_schema_dict = await build_res_schema_dict(def)
+            .catch(ERROR.throw)
         return function perform_op (request, response, next) {
             if (req_schema_dict) {
                 const media_type = get_media_type(request)
@@ -151,7 +153,7 @@
                                 .catch((error) => {
                                     // TODO: Throw/log/something when response validation fails
                                     console.error(error)
-                                    return response.status(500).end()
+                                    return response.sendStatus(500)
                                 })
                         }
                     }

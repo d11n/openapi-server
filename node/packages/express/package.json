@@ -33,7 +33,7 @@
         "express": "^4.17.1"
     },
     "devDependencies": {
-        "ava": "^3.5.0",
+        "ava": "^3.5.2",
         "nyc": "^15.0.0"
     },
     "scripts": {

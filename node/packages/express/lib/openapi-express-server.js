@@ -112,22 +112,25 @@
                 const media_type = get_media_type(request)
                 const req_schema = req_schema_dict[media_type]
                 if (req_schema) {
-                    try {
-                        req_schema.validate(request.body)
-                    } catch (error) {
-                        response
-                            .status(400)
-                            .send(`Request does not conform to the ${ media_type } schema`)
-                            // ^ TODO: Make validation 400 message translatable
-                        return next(error)
-                    }
+                    return req_schema.validate(request.body)
+                        .then(_perform_op)
+                        .catch(reject_op)
                 }
-
+            } else {
+                return _perform_op()
             }
-            const response_proxy = new Proxy(response, {
-                get: get_get_trap,
-            })
-            return op(request, response_proxy, next)
+
+            ///////////
+
+            function _perform_op () {
+                const response_proxy = new Proxy(response, {
+                    get: get_get_trap,
+                })
+                return op(request, response_proxy, next)
+            }
+            function reject_op (error) {
+                return response.status(400).send(error.message)
+            }
         }
 
         ///////////
@@ -269,7 +272,7 @@
     }
 
     function get_formats () {
-        return {
+        const openapi_formats = {
             int32: {
                 type: 'integer',
                 validate: (value) => {
@@ -330,6 +333,19 @@
                 compare: compare,
                 async: false,
             },
+        }
+        const mongo_objectid_regex = /^[0-9a-fA-F]{24}$/
+        const other_formats = {
+            'mongo-objectid': {
+                type: 'string',
+                validate: (value) => mongo_objectid_regex.test(value),
+                compare: compare,
+                async: false,
+            }
+        }
+        return {
+            ...openapi_formats,
+            ...other_formats,
         }
     }
 

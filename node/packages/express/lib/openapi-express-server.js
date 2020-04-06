@@ -86,7 +86,7 @@
         const path_dict = document.definition.paths
         // TODO: do this async'ly
         for (const path_key of Object.keys(path_dict)) {
-            const express_path = path_key.replace(/\{\s*(\S+)\s*\}/g, ':$1')
+            const express_path = path_key.replace(/\{\s*(\w+)\s*\}/g, ':$1')
             const path_item = path_dict[path_key]
             for (const op_prop of op_prop_list) {
                 const op_def = path_item[op_prop]
